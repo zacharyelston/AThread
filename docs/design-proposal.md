@@ -5,14 +5,14 @@ Status: Draft for discussion
 
 ## 1. Summary
 
-This document proposes an iOS capture app built on ARKit. It helps teams reconstruct and stitch 3D meshes of real scenes. The app would:
+This document proposes an iOS capture app built on ARKit. It helps reconstruct and stitch 3D meshes of real scenes. The app would:
 
 1. Generate printable registration markers at several distance ranges (about 3 m, 10 m and 50 m, plus a custom size) and print them over Wi-Fi through AirPrint.
 2. Detect those markers live in the ARKit camera feed, estimate their 6-DoF pose, and anchor them in the ARKit world frame.
 3. Record photos, camera poses, intrinsics, LiDAR mesh and marker observations as one capture bundle. A downstream process can use the bundle to align and merge separate capture sessions.
 4. Support a second marker set printed on clothing. The subject can then be tracked, masked or registered on their own, without contaminating the static background solve.
 
-AThread (Ariadne's Thread) is a standalone tool with its own repository. Any later server-side processing (stitching jobs, Rerun visualisation, blob storage) would be deployed onto the Hydra/AKS platform through `hydra-host`, which owns the ArgoCD catalog. The `apollo` project group already covers computer-vision and robotics workloads, so it is the most likely home for that processing.
+AThread (Ariadne's Thread) is a standalone tool with its own repository. Heavier processing (multi-session stitching and visualisation) is planned as a separate server-side step. Where it runs is an open question (section 11).
 
 ## 2. Goals and non-goals
 
@@ -150,15 +150,15 @@ Proposed ID allocation within 36h11 (587 IDs):
 │                 → corners + ID → PnP with intrinsics   │
 │                 → ARAnchor("tag-<id>") in world frame  │
 │ Session store   ARWorldMap, anchors, manifest          │
-│ Export          Capture bundle → Azure Blob (optional) │
+│ Export          Capture bundle → cloud storage (opt.)  │
 └────────────────────────────────────────────────────────┘
                           │
                           ▼
-┌──────── Hydra / AKS (apollo group, later phase) ───────┐
+┌──────────── Processing service (later phase) ──────────┐
 │ Stitch job: align sessions on shared scene tag IDs     │
 │ (rigid/similarity fit), refine with ICP or bundle      │
 │ adjustment, mask the subject using garment tags        │
-│ Visualise in Rerun                                     │
+│ Visualise (e.g. Rerun)                                 │
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -197,17 +197,17 @@ Before the tier sizes are fixed, run a short field test:
 | --- | --- |
 | 0 — Prototype | Marker Studio (Near tier, AirPrint, measured-size entry), live AprilTag detection overlay, field test from section 9 |
 | 1 — Capture | High-resolution stills, LiDAR mesh, tag anchors, capture-bundle export, Mid and Far tiers with tiling and large-format PDF |
-| 2 — Multi-session | Server-side alignment of sessions on shared tag IDs in the `apollo` group, Rerun visualisation |
+| 2 — Multi-session | Server-side alignment of sessions on shared tag IDs, visualisation |
 | 3 — Subject | Garment marker set, subject masking, optional subject-mesh registration |
 
 ## 11. Open questions
 
-1. Which device models will the team use in the field? This sets the LiDAR availability and the measured `fx` values.
+1. Which device models will be used in the field? This sets the LiDAR availability and the measured `fx` values.
 2. What is the furthest real working distance? If scenes rarely exceed 25 m, the Far tier can shrink, and so can the print cost.
-3. Should the capture bundles land in Azure Blob under an existing storage account, or in a new one owned by the `apollo` group?
+3. Where should capture bundles be stored (local export, iCloud Drive or a cloud bucket), and where should the processing service run?
 4. Is there a preferred downstream reconstruction tool (e.g. Apple Object Capture, COLMAP or an internal pipeline)? This determines the export conventions.
 5. For garments, is the priority subject masking (simpler) or subject-mesh registration (needs the subject to hold still)?
-6. Long-term GitHub owner for the `AThread` repository (currently a personal account), and who maintains the app.
+6. Licence for the repository (e.g. MIT or Apache-2.0), given that the AprilTag library is BSD-licensed.
 
 ## 12. References
 
