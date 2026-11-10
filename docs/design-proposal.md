@@ -1,4 +1,4 @@
-# Ariadne — ARKit Registration-Marker Capture App: Design Proposal
+# AThread — ARKit Registration-Marker Capture App: Design Proposal
 
 Date: 2026-11-10
 Status: Draft for discussion
@@ -12,7 +12,7 @@ This document proposes an iOS capture app built on ARKit. It helps teams reconst
 3. Record photos, camera poses, intrinsics, LiDAR mesh and marker observations as one capture bundle. A downstream process can use the bundle to align and merge separate capture sessions.
 4. Support a second marker set printed on clothing. The subject can then be tracked, masked or registered on their own, without contaminating the static background solve.
 
-Ariadne is a standalone tool with its own repository. Any later server-side processing (stitching jobs, Rerun visualisation, blob storage) would be deployed onto the Hydra/AKS platform through `hydra-host`, which owns the ArgoCD catalog. The `apollo` project group already covers computer-vision and robotics workloads, so it is the most likely home for that processing.
+AThread (Ariadne's Thread) is a standalone tool with its own repository. Any later server-side processing (stitching jobs, Rerun visualisation, blob storage) would be deployed onto the Hydra/AKS platform through `hydra-host`, which owns the ArgoCD catalog. The `apollo` project group already covers computer-vision and robotics workloads, so it is the most likely home for that processing.
 
 ## 2. Goals and non-goals
 
@@ -140,7 +140,7 @@ Proposed ID allocation within 36h11 (587 IDs):
 ## 8. App architecture
 
 ```
-┌──────────────────── Ariadne iOS app ───────────────────┐
+┌──────────────────── AThread iOS app ───────────────────┐
 │ Marker Studio   Generate tags, size by tier or custom, │
 │                 PDF/AirPrint, measured-size entry      │
 │ Capture         ARWorldTrackingConfiguration           │
@@ -207,7 +207,7 @@ Before the tier sizes are fixed, run a short field test:
 3. Should the capture bundles land in Azure Blob under an existing storage account, or in a new one owned by the `apollo` group?
 4. Is there a preferred downstream reconstruction tool (e.g. Apple Object Capture, COLMAP or an internal pipeline)? This determines the export conventions.
 5. For garments, is the priority subject masking (simpler) or subject-mesh registration (needs the subject to hold still)?
-6. GitHub owner for the `ariadne` repository, and who maintains the app.
+6. Long-term GitHub owner for the `AThread` repository (currently a personal account), and who maintains the app.
 
 ## 12. References
 

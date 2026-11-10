@@ -1,8 +1,8 @@
-# Ariadne
+# AThread
 
-Ariadne is an iOS capture tool built on ARKit. It produces printable registration markers and uses them to anchor photo and LiDAR captures, so separate capture sessions can be aligned and stitched into one 3D mesh.
+AThread (Ariadne's Thread) is an iOS capture tool built on ARKit. It produces printable registration markers and uses them to anchor photo and LiDAR captures, so separate capture sessions can be aligned and stitched into one 3D mesh.
 
-The name follows the Hydra / Apollo naming convention. In the myth, Ariadne's thread marks the way through the labyrinth. Ariadne's markers do the same job for a scene.
+The name follows the Hydra / Apollo naming convention. In the myth, Ariadne's thread marks the way through the labyrinth. AThread's markers do the same job for a scene.
 
 ## Status
 
