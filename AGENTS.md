@@ -6,7 +6,7 @@ Guidance for AI agents working in the `AThread` repository.
 
 `AThread` owns the source code and design documents for the AThread (Ariadne's Thread) iOS capture tool: ARKit capture, AprilTag registration markers, AirPrint marker printing, and capture-bundle export.
 
-It does **not** own cluster or deployment configuration. Server-side workloads (stitching, visualisation) are deployed through `hydra-host` and its ArgoCD catalog.
+Server-side processing (multi-session stitching, visualisation) is planned for a later phase and is not yet part of this repository.
 
 ## Conventions
 
